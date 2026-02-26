@@ -3,85 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duckcoin ($DUCK) - Fly Higher!</title>
+    <title>DUCKCOIN - THE ELITE TOKEN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+        
         body { 
-            background-color: #030712; 
-            color: #f9fafb; 
-            font-family: 'Unbounded', sans-serif; 
+            background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+            color: #ffffff;
+            font-family: 'Archivo Black', sans-serif;
+            margin: 0;
             overflow-x: hidden;
-            font-weight: 800; /* Tüm yazıları kalın yapar */
-            font-style: italic; /* Tüm yazıları italik yapar */
         }
-        .golden-glow { box-shadow: 0 0 50px rgba(234, 179, 8, 0.5); }
-        .hero-bg { background: radial-gradient(circle at center, #1e293b 0%, #030712 100%); }
-        .duck-logo { 
-            max-width: 280px; 
-            animation: pulse-gold 2s infinite ease-in-out; 
+
+        /* TÜM YAZILAR KALIN VE İTALİK */
+        h1, h2, h3, p, li, a {
+            font-weight: 900 !important;
+            font-style: italic !important;
+            text-transform: uppercase;
+        }
+
+        /* ALTIN PARLAMA EFEKTİ */
+        .gold-text {
+            color: #facc15;
+            text-shadow: 0 0 20px rgba(250, 204, 21, 0.8), 0 0 40px rgba(250, 204, 21, 0.4);
+        }
+
+        /* AMBLEM SIKIŞTIRMA VE ANİMASYON */
+        .duck-logo-container {
+            perspective: 1000px;
+        }
+        .duck-logo {
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            border: 4px solid #eab308;
+            border: 8px solid #facc15;
+            box-shadow: 0 0 60px #facc15;
+            animation: rotate-duck 5s infinite linear;
         }
-        @keyframes pulse-gold { 
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #eab308); } 
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 35px #eab308); } 
+        @keyframes rotate-duck {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.1); }
+            100% { transform: rotateY(360deg) scale(1); }
         }
-        .instruction-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 2px solid #eab308;
-            border-radius: 2rem;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
+
+        /* ŞATAFATLI KARTLAR */
+        .premium-card {
+            background: linear-gradient(145deg, #111, #222);
+            border: 3px solid #facc15;
+            border-radius: 30px;
+            padding: 40px;
+            transition: 0.4s;
+        }
+        .premium-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 0 40px rgba(250, 204, 21, 0.6);
+        }
+
+        /* BUTON NEON */
+        .neon-btn {
+            background: #facc15;
+            color: black;
+            padding: 20px 50px;
+            font-size: 24px;
+            border-radius: 50px;
+            box-shadow: 0 0 30px #facc15;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .neon-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 60px #facc15;
         }
     </style>
 </head>
-<body class="hero-bg">
+<body>
 
-    <header class="py-20 text-center relative z-10">
-        <div class="container mx-auto px-6">
-            <div class="mb-10 flex justify-center">
-                <img src="https://emerald-genetic-marten-72.mypinata.cloud/ipfs/bafkreicnd6f66pky77g6n3vsmv6v7pxvljv43q3f4gny3h6n3z5qge4vwa" alt="Duckcoin" class="duck-logo golden-glow">
-            </div>
-            
-            <h1 class="text-7xl font-black text-yellow-400 mb-6 tracking-tighter uppercase italic">***DUCKCOIN***</h1>
-            <p class="text-2xl text-white mb-12 italic">***VAK VAK! SOLANA AĞININ EN GÖSTERİŞLİ VE EN HIZLI COIN'İ İLE TANIŞIN!***</p>
-            
-            <div class="flex flex-wrap gap-6 justify-center">
-                <a href="#guide" class="bg-yellow-500 text-black px-12 py-5 rounded-full text-xl hover:scale-110 transition-all shadow-[0_0_20px_#eab308]">***HEMEN AL***</a>
-                <a href="#" class="border-2 border-yellow-500 text-yellow-500 px-12 py-5 rounded-full text-xl hover:bg-yellow-500 hover:text-black transition-all">***KONTRAT ADRESİ***</a>
-            </div>
+    <header class="min-h-screen flex flex-col justify-center items-center text-center px-4">
+        <div class="duck-logo-container mb-12">
+            <img src="https://emerald-genetic-marten-72.mypinata.cloud/ipfs/bafkreicnd6f66pky77g6n3vsmv6v7pxvljv43q3f4gny3h6n3z5qge4vwa" class="duck-logo">
+        </div>
+        
+        <h1 class="text-8xl md:text-9xl gold-text mb-6">DUCKCOIN</h1>
+        <p class="text-3xl md:text-4xl italic mb-12 tracking-widest text-white">*** EN GÜÇLÜ, EN ŞATAFATLI, EN BÜYÜK! ***</p>
+        
+        <div class="space-x-6">
+            <a href="#buy" class="neon-btn">***HEMEN SATIN AL***</a>
         </div>
     </header>
 
-    <section id="guide" class="max-w-6xl mx-auto px-6 py-20">
-        <h2 class="text-5xl font-black text-center text-yellow-400 mb-16 italic underline decoration-yellow-600">***NASIL SATIN ALINIR?***</h2>
+    <section id="buy" class="py-24 px-6 max-w-7xl mx-auto">
+        <h2 class="text-6xl gold-text text-center mb-20 italic">*** PHANTOM İLE UÇUŞA GEÇ ***</h2>
         
         <div class="grid md:grid-cols-2 gap-12">
-            <div class="instruction-card">
-                <h3 class="text-3xl text-yellow-400 mb-6">***1. BORSADAN PHANTOM'A TRANSFER***</h3>
-                <p class="text-gray-200 leading-relaxed mb-4">***PHANTOM CÜZDANINA SOLANA (SOL) GÖNDEREREK BAŞLA:***</p>
-                <ul class="space-y-4 text-white list-disc ml-6">
-                    <li>***BORSADA 'ÇEKME' (WITHDRAW) BÖLÜMÜNE GİT.***</li>
-                    <li>***PHANTOM CÜZDAN ADRESİNİ KOPYALA VE YAPIŞTIR.***</li>
-                    <li>***AĞ OLARAK MUTLAKA 'SOLANA' SEÇTİĞİNDEN EMİN OL!***</li>
-                </ul>
+            <div class="premium-card">
+                <h3 class="text-4xl text-yellow-400 mb-8 italic">*** 1. SOLANA TRANSFERİ ***</h3>
+                <p class="text-xl leading-relaxed">
+                    *** HERHANGİ BİR BORSADAN (BINANCE, GATE vb.) PHANTOM CÜZDANINA SOL GÖNDER. ***<br><br>
+                    *** ADRESİ KOPYALA, SOLANA AĞINI SEÇ VE PHANTOM'U DOLDUR! ***
+                </p>
             </div>
 
-            <div class="instruction-card">
-                <h3 class="text-3xl text-yellow-400 mb-6">***2. PHANTOM İLE ALIM YAP***</h3>
-                <p class="text-gray-200 leading-relaxed mb-4">***SOL GELDİKTEN SONRA DUCKCOIN SAHİBİ OLMAK ÇOK KOLAY:***</p>
-                <ul class="space-y-4 text-white list-decimal ml-6">
-                    <li>***PHANTOM İÇİNDEKİ TARAYICIYA 'JUP.AG' YAZIN.***</li>
-                    <li>***CÜZDANI BAĞLAYIP ÜSTTE SOL, ALTTA DUCK SEÇİN.***</li>
-                    <li>***'SWAP' BUTONUNA BASIN VE UÇUŞA GEÇİN!***</li>
-                </ul>
+            <div class="premium-card">
+                <h3 class="text-4xl text-yellow-400 mb-8 italic">*** 2. DUCKCOIN SWAP ***</h3>
+                <p class="text-xl leading-relaxed">
+                    *** PHANTOM İÇİNDEKİ DÜNYA SİMGESİNE TIKLA VE JUP.AG ADRESİNE GİT. ***<br><br>
+                    *** SOL'LERİNİ DUCKCOIN İLE TAKAS ET VE ARKANA YASLAN! ***
+                </p>
             </div>
         </div>
     </section>
 
-    <footer class="text-center py-20 text-yellow-500 opacity-70">
-        ***© 2026 DUCKCOIN ELİT EKİBİ - TÜM HAKLARI SAKLIDIR.***
+    <footer class="py-20 text-center border-t border-yellow-900">
+        <p class="text-yellow-600 text-2xl italic">*** © 2026 DUCKCOIN GLOBAL EMPIRE ***</p>
     </footer>
 
 </body>
