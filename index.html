@@ -6,52 +6,82 @@
     <title>Duckcoin ($DUCK) - Fly Higher!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
-        .duck-gradient { background: linear-gradient(90deg, #facc15 0%, #eab308 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&display=swap');
+        body { 
+            background-color: #030712; 
+            color: #f9fafb; 
+            font-family: 'Unbounded', sans-serif; 
+            overflow-x: hidden;
+            font-weight: 800; /* Tüm yazıları kalın yapar */
+            font-style: italic; /* Tüm yazıları italik yapar */
+        }
+        .golden-glow { box-shadow: 0 0 50px rgba(234, 179, 8, 0.5); }
+        .hero-bg { background: radial-gradient(circle at center, #1e293b 0%, #030712 100%); }
+        .duck-logo { 
+            max-width: 280px; 
+            animation: pulse-gold 2s infinite ease-in-out; 
+            border-radius: 50%;
+            border: 4px solid #eab308;
+        }
+        @keyframes pulse-gold { 
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #eab308); } 
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 35px #eab308); } 
+        }
+        .instruction-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 2px solid #eab308;
+            border-radius: 2rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
-<body>
+<body class="hero-bg">
 
-    <header class="py-20 text-center">
-        <h1 class="text-6xl font-black text-yellow-400 mb-4 italic">DUCKCOIN</h1>
-        <p class="text-xl text-gray-400">Vak vak! Solana ağının en hızlı yükselen coin'i.</p>
-        <div class="mt-8">
-            <a href="#how-to-buy" class="duck-gradient text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition">Nasıl Satın Alınır?</a>
+    <header class="py-20 text-center relative z-10">
+        <div class="container mx-auto px-6">
+            <div class="mb-10 flex justify-center">
+                <img src="https://emerald-genetic-marten-72.mypinata.cloud/ipfs/bafkreicnd6f66pky77g6n3vsmv6v7pxvljv43q3f4gny3h6n3z5qge4vwa" alt="Duckcoin" class="duck-logo golden-glow">
+            </div>
+            
+            <h1 class="text-7xl font-black text-yellow-400 mb-6 tracking-tighter uppercase italic">***DUCKCOIN***</h1>
+            <p class="text-2xl text-white mb-12 italic">***VAK VAK! SOLANA AĞININ EN GÖSTERİŞLİ VE EN HIZLI COIN'İ İLE TANIŞIN!***</p>
+            
+            <div class="flex flex-wrap gap-6 justify-center">
+                <a href="#guide" class="bg-yellow-500 text-black px-12 py-5 rounded-full text-xl hover:scale-110 transition-all shadow-[0_0_20px_#eab308]">***HEMEN AL***</a>
+                <a href="#" class="border-2 border-yellow-500 text-yellow-500 px-12 py-5 rounded-full text-xl hover:bg-yellow-500 hover:text-black transition-all">***KONTRAT ADRESİ***</a>
+            </div>
         </div>
     </header>
 
-    <section id="how-to-buy" class="max-w-4xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold border-b-2 border-yellow-500 pb-2 mb-8 text-center">Satın Alma Rehberi</h2>
+    <section id="guide" class="max-w-6xl mx-auto px-6 py-20">
+        <h2 class="text-5xl font-black text-center text-yellow-400 mb-16 italic underline decoration-yellow-600">***NASIL SATIN ALINIR?***</h2>
         
-        <div class="space-y-12">
-            <div class="bg-slate-800 p-6 rounded-2xl shadow-xl">
-                <h3 class="text-2xl font-bold text-yellow-400 mb-4">1. Borsadan Phantom'a Para Transferi</h3>
-                <p class="mb-4">Binance, Gate.io veya OKX gibi bir borsadan Phantom cüzdanınıza SOL (Solana) göndermelisiniz:</p>
-                <ul class="list-disc ml-6 space-y-2 text-gray-300">
-                    <li>Borsada "Çekme" (Withdraw) sekmesine gidin.</li>
-                    <li>Varlık olarak <b>SOL</b> seçin.</li>
-                    <li>Phantom cüzdanınızı açın, üst kısımdaki cüzdan adresinize tıklayarak kopyalayın.</li>
-                    <li>Borsadaki adres kısmına yapıştırın ve <b>Solana (SOL)</b> ağını seçtiğinizden emin olun.</li>
-                    <li>İşlemi onaylayın. 5-10 dakika içinde SOL bakiyeniz Phantom'da görünecektir.</li>
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="instruction-card">
+                <h3 class="text-3xl text-yellow-400 mb-6">***1. BORSADAN PHANTOM'A TRANSFER***</h3>
+                <p class="text-gray-200 leading-relaxed mb-4">***PHANTOM CÜZDANINA SOLANA (SOL) GÖNDEREREK BAŞLA:***</p>
+                <ul class="space-y-4 text-white list-disc ml-6">
+                    <li>***BORSADA 'ÇEKME' (WITHDRAW) BÖLÜMÜNE GİT.***</li>
+                    <li>***PHANTOM CÜZDAN ADRESİNİ KOPYALA VE YAPIŞTIR.***</li>
+                    <li>***AĞ OLARAK MUTLAKA 'SOLANA' SEÇTİĞİNDEN EMİN OL!***</li>
                 </ul>
             </div>
 
-            <div class="bg-slate-800 p-6 rounded-2xl shadow-xl">
-                <h3 class="text-2xl font-bold text-yellow-400 mb-4">2. Duckcoin ($DUCK) Satın Almak</h3>
-                <p class="mb-4">SOL bakiyeniz geldikten sonra şu adımları izleyin:</p>
-                <ol class="list-decimal ml-6 space-y-2 text-gray-300">
-                    <li>Phantom cüzdanının içindeki **Dünya (Tarayıcı)** simgesine dokunun.</li>
-                    <li>Arama çubuğuna <b>Jupiter (jup.ag)</b> veya <b>Raydium.io</b> yazın.</li>
-                    <li>"Connect Wallet" diyerek Phantom'u bağlayın.</li>
-                    <li>Üst kısma SOL, alt kısma ise Duckcoin kontrat adresini yapıştırın.</li>
-                    <li>"Swap" butonuna basın ve cüzdandan gelen bildirimi onaylayın.</li>
-                </ol>
+            <div class="instruction-card">
+                <h3 class="text-3xl text-yellow-400 mb-6">***2. PHANTOM İLE ALIM YAP***</h3>
+                <p class="text-gray-200 leading-relaxed mb-4">***SOL GELDİKTEN SONRA DUCKCOIN SAHİBİ OLMAK ÇOK KOLAY:***</p>
+                <ul class="space-y-4 text-white list-decimal ml-6">
+                    <li>***PHANTOM İÇİNDEKİ TARAYICIYA 'JUP.AG' YAZIN.***</li>
+                    <li>***CÜZDANI BAĞLAYIP ÜSTTE SOL, ALTTA DUCK SEÇİN.***</li>
+                    <li>***'SWAP' BUTONUNA BASIN VE UÇUŞA GEÇİN!***</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <footer class="text-center py-10 text-gray-500 text-sm">
-        © 2026 Duckcoin Community. Finansal tavsiye değildir.
+    <footer class="text-center py-20 text-yellow-500 opacity-70">
+        ***© 2026 DUCKCOIN ELİT EKİBİ - TÜM HAKLARI SAKLIDIR.***
     </footer>
 
 </body>
